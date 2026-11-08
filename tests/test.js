@@ -1,6 +1,7 @@
 const cds = require('@sap/cds/lib')
 const { default: axios } = require('axios')
 const { GET, POST, DELETE, PATCH, expect } = cds.test(__dirname + '../../')
+const { normalize, ruleBased } = require('../srv/ai/classifier')
 
 axios.defaults.auth = { username: 'alice' }
 
@@ -121,5 +122,18 @@ describe('Draft Choreography APIs', () => {
   it('- Delete the Incident', async () => {
     const response = await DELETE(`/odata/v4/processor/Incidents(ID=${draftId},IsActiveEntity=true)`)
     expect(response.status).to.eql(204)
+  })
+})
+
+describe('classifier', () => {
+  it('rejects values outside the whitelist', () => {
+    expect(normalize({ urgency: 'X', category: 'hack', rationale: 5 }))
+      .toEqual({ urgency: null, category: 'other', rationale: null })
+  })
+  it('accepts valid output', () => {
+    expect(normalize({ urgency: 'H', category: 'network', rationale: 'VPN down' }).urgency).toBe('H')
+  })
+  it('falls back to rules', () => {
+    expect(ruleBased({ title: 'URGENT: server down' }).urgency).toBe('H')
   })
 })

@@ -9,7 +9,11 @@ service ProcessorService {
     @readonly
     entity Customers as projection on my.Customers;
 }
-
+annotate ProcessorService with @(requires: ['support', 'admin']);
+annotate ProcessorService.Incidents with @restrict: [
+  { grant: ['READ','CREATE','UPDATE'], to: 'support' },
+  { grant: '*', to: 'admin' }
+];
 annotate ProcessorService.Incidents with @odata.draft.enabled; 
 annotate ProcessorService with @(requires: 'support');
 annotate AdminService with @(requires: 'admin');

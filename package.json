@@ -13,7 +13,7 @@
     "cds-plugin-ui5": "^0.13.0"
   },
   "scripts": {
-    "test": "npx jest tests/test.js",
+    "test": "npx jest tests",
     "start": "cds-serve",
     "watch-incidents": "cds watch --open ns.incidents/index.html?sap-ui-xx-viewCache=false --livereload false"
   },
@@ -38,6 +38,11 @@
             "bob": {
               "roles": [
                 "support"
+              ]
+            },
+            "carol": {
+              "roles": [
+                "admin"
               ]
             }
           }
