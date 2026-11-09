@@ -103,15 +103,18 @@ describe('Draft Choreography APIs', () => {
         })
         expect(status).to.equal(200)
       })
-      it(' `Should fail to activate draft trying to re-open the incidentt', async () => {
+      it('Should fail to activate the draft that re-opens the closed incident', async () => {
+        let error
         try {
-          const response = await POST(
+          await POST(
             `/odata/v4/processor/Incidents(ID=${incidentId},IsActiveEntity=false)/ProcessorService.draftActivate`
           )
-        } catch (error) {
-          expect(error.response.status).to.eql(500)
-          expect(error.response.data.error.message).to.include(`Can't modify a closed incident`)
+        } catch (e) {
+          error = e
         }
+        expect(error, 'activation should have been rejected').to.exist
+        expect(error.response.status).to.be.at.least(400)
+        expect(error.response.data.error.message).to.include("Can't modify a closed incident")
       })
     })
   })
@@ -119,8 +122,20 @@ describe('Draft Choreography APIs', () => {
     const response = await DELETE(`/odata/v4/processor/Incidents(ID=${draftId},IsActiveEntity=false)`)
     expect(response.status).to.eql(204)
   })
-  it('- Delete the Incident', async () => {
-    const response = await DELETE(`/odata/v4/processor/Incidents(ID=${draftId},IsActiveEntity=true)`)
+  it('- Support users cannot delete an incident', async () => {
+    let error
+    try {
+      await DELETE(`/odata/v4/processor/Incidents(ID=${draftId},IsActiveEntity=true)`)
+    } catch (e) {
+      error = e
+    }
+    expect(error, 'delete should have been forbidden').to.exist
+    expect(error.response.status).to.eql(403)
+  })
+  it('- Admin can delete the incident (cleanup)', async () => {
+    const response = await DELETE(`/odata/v4/admin/Incidents(${draftId})`, {
+      auth: { username: 'carol' }
+    })
     expect(response.status).to.eql(204)
   })
 })
@@ -128,12 +143,12 @@ describe('Draft Choreography APIs', () => {
 describe('classifier', () => {
   it('rejects values outside the whitelist', () => {
     expect(normalize({ urgency: 'X', category: 'hack', rationale: 5 }))
-      .toEqual({ urgency: null, category: 'other', rationale: null })
+      .to.deep.equal({ urgency: null, category: 'other', rationale: null })
   })
   it('accepts valid output', () => {
-    expect(normalize({ urgency: 'H', category: 'network', rationale: 'VPN down' }).urgency).toBe('H')
+    expect(normalize({ urgency: 'H', category: 'network', rationale: 'VPN down' }).urgency).to.equal('H')
   })
   it('falls back to rules', () => {
-    expect(ruleBased({ title: 'URGENT: server down' }).urgency).toBe('H')
+    expect(ruleBased({ title: 'URGENT: server down' }).urgency).to.equal('H')
   })
 })

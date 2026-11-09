@@ -12,6 +12,22 @@ build-parameters:
         - npm ci
         - npx cds build --production
 modules:
+  - name: incident-management-approuter
+    type: approuter.nodejs
+    path: app/router
+    parameters:
+      memory: 256M
+      disk-quota: 256M
+    requires:
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api
+          url: ~{srv-url}
+          forwardAuthToken: true
+      - name: incident-management-auth
+      - name: incident-management-html5-repo-runtime
+
   - name: incident-management-srv
     type: nodejs
     path: gen/srv
@@ -101,6 +117,12 @@ modules:
               sap.cloud.service: incidentmanagement.service
 
 resources:
+  - name: incident-management-html5-repo-runtime
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-runtime
+      
   - name: incident-management-auth
     type: org.cloudfoundry.managed-service
     parameters:
