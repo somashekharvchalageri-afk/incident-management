@@ -160,11 +160,11 @@ xs-security.json    XSUAA scopes and role templates
 
 | List report | Object page |
 |---|---|
-| ![List report](docs/screenshots/list-report.png) | ![Object page](docs/screenshots/object-page.png) |
+| ![List report](docs/screenshots/List-Report.png) | ![Object page](docs/screenshots/Object-Preview.png) |
 
 | BTP role collection | Deployed applications |
 |---|---|
-| ![Role collection](docs/screenshots/role-collection.png) | ![Applications](docs/screenshots/cf-apps.png) |
+| ![Role collection](docs/screenshots/Role-Collections.png) | ![Applications](docs/screenshots/cf-apps.png) |
 
 ## Possible next steps
 
