@@ -4,7 +4,7 @@ A support-incident application built with the **SAP Cloud Application Programmin
 
 The project started from the SAP CAP incident-management learning path and was extended with business logic, a pluggable classification service, role-based access, automated tests and a documented BTP deployment. See [What I added](#what-i-added) for the differences.
 
-> **Demo:** screenshots are in [`docs/screenshots`](docs/screenshots). A short screen recording is available at **[demo video link]**. The live deployment runs on a BTP trial account and sits behind SAP login, so it is shown on request.
+> **Demo:** screenshots are in [`docs/screenshots`](docs/screenshots). A short screen recording is available at **[demo video link]** [`docs/screenshots`](docs/screenshots/Index.mov). The live deployment runs on a BTP trial account and sits behind SAP login, so it is shown on request.
 
 ## Features
 
